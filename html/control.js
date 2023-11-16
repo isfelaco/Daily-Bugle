@@ -13,6 +13,7 @@ const viewType = {
 function initPage() {
   // set up the page
   // set the title
+  console.log("HERE");
   document.getElementById("heading").innerHTML = "Headline";
 
   /*
@@ -111,4 +112,7 @@ function statusMessage(message) {
   document.getElementById("messages").innerHTML = message;
 }
 
-function loginUser(user) {}
+function loginUser(user) {
+  console.log("Login");
+  console.log(user);
+}
