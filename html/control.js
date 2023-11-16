@@ -26,26 +26,24 @@ function initPage() {
 
   // modal to login
   // open login modal
-  var loginBtn = document.getElementById("loginBtn");
-  loginBtn.onclick = function () {
-    modal.style.display = "block";
+  var loginModal = document.getElementById("loginModal");
+
+  var openModal = document.getElementById("loginBtn");
+  openModal.onclick = function () {
+    loginModal.style.display = "block";
   };
 
-  // control buttons on the modal if open
-  var loginModal = document.getElementById("loginModal");
-  if (loginModal) {
-    var closeBtn = document.getElementById("closeModal");
-    closeBtn.onclick = function () {
-      modal.style.display = "none";
-    };
-    // close modal on click away
-    window.onclick = function (event) {
-      if (event.target != modal) {
-        modal.style.display = "none";
-      }
-    };
-    // there will be an html form with a submit button
-  }
+  // close modal using button
+  var closeSpan = document.getElementsByClassName("close")[0];
+  closeSpan.onclick = function () {
+    loginModal.style.display = "none";
+  };
+  // close modal on click away
+  window.onclick = function (event) {
+    if (event.target == loginModal) {
+      loginModal.style.display = "none";
+    }
+  };
 }
 
 function fetchArticles() {
@@ -114,5 +112,7 @@ function statusMessage(message) {
 
 function loginUser(user) {
   console.log("Login");
-  console.log(user);
+  let username = document.getElementById("userName").value;
+  let password = document.getElementById("password").value;
+  return false;
 }

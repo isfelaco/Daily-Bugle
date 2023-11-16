@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    <h1>helllooo</h1>
+  <body onload="initPage()">
+    <h1 id="heading">Title</h1>
+    <button id="loginBtn">[ Login ]</button>
     <div id="loginModal" class="modal">
-      <h1>hello?</h1>
       <form method="post" name="addUserForm">
         <!-- html structure of the modal window-->
         <div class="modal-content">
@@ -16,8 +16,8 @@
           <p><input type="text" name="userName" id="userName" /></p>
           <p><input type="text" name="password" id="password" /></p>
           <p>
-            <button id="loginBtn" onclick="return loginUser()">
-              [ login!!! ]
+            <button id="loginUser" onclick="return loginUser()">
+              [ login ]
             </button>
           </p>
         </div>
