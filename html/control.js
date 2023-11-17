@@ -13,7 +13,6 @@ const viewType = {
 function initPage() {
   // set up the page
   // set the title
-  console.log("HERE");
   document.getElementById("heading").innerHTML = "Headline";
 
   /*
@@ -23,6 +22,19 @@ function initPage() {
   }
   else loadContent(viewType["unauthenticated"]);
   */
+  var article = {
+    title: "test title",
+  };
+
+  var testBtn = document.getElementById("testBtn");
+  testBtn.onclick = function () {
+    recordArticle(article);
+  };
+
+  var fetchBtn = document.getElementById("fetchArticles");
+  fetchBtn.onclick = function () {
+    fetchArticles();
+  };
 
   // modal to login
   // open login modal
@@ -51,9 +63,10 @@ function fetchArticles() {
   articleNames
     .then((res) => res.json())
     .then((result) => {
-      for (item of result) {
-        // do something
-      }
+      console.log(result);
+      // for (item of result) {
+      //   console.log("result");
+      // }
     });
 }
 
@@ -100,10 +113,10 @@ async function recordArticle(article) {
   })
     .then((response) => response.json())
     .then((result) => {
-      statusMessage(result);
-      //   fetchAndListVoters(); // update the list of voters
+      statusMessage("success");
+      // update the list of articles ?
     })
-    .catch((error) => console.log("error saving article"));
+    .catch((error) => console.log("error saving article: ", error));
 }
 
 function statusMessage(message) {
