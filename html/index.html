@@ -1,33 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Basic HTML5 document</title>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daily Bugle</title>
     <link rel="stylesheet" href="styles.css" />
+    <script src="control.js" defer></script>
   </head>
   <body onload="initPage()">
-    <h1 id="heading">Title</h1>
+    <div class="header">
+      <h1>Headline</h1>
+      <div id="loginArea" class="loginArea">
+        <button id="openModal" class="loginbtn">Login</button>
+        <p id="curUser"></p>
+        <button id="logOutBtn" class="logoutbtn">Logout</button>
+      </div>
+    </div>
+
     <button id="testBtn">[ test ]</button>
     <button id="fetchArticles">[ fetch ]</button>
 
-    <button id="loginBtn">[ Login ]</button>
-    <div id="loginModal" class="modal">
-      <form method="post" name="addUserForm">
-        <!-- html structure of the modal window-->
-        <div class="modal-content">
-          <span class="close">X</span>
-          <p><input type="text" name="userName" id="userName" /></p>
-          <p><input type="text" name="password" id="password" /></p>
-          <p>
-            <button id="loginUser" onclick="return loginUser()">
-              [ login ]
-            </button>
-          </p>
-        </div>
-      </form>
-    </div>
+    <button onclick="loadContent('reader')">Switch to Reader View</button>
+    <button onclick="loadContent('author')">Switch to Author View</button>
 
-    <div id="messages">Messages</div>
+    <div id="content"></div>
   </body>
 </html>
-<script src="control.js"></script>

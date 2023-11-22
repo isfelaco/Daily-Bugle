@@ -5,23 +5,27 @@ endpoint["readers"] = "http://localhost:8080/api/readers";
 endpoint["authors"] = "http://localhost:8080/api/authors";
 
 const viewType = {
-  home: "unauthenticated",
+  home: "commenter",
   reader: "reader",
   author: "author",
 };
 
 function initPage() {
   // set up the page
-  // set the title
-  document.getElementById("heading").innerHTML = "Headline";
-
-  /*
-  if (cached_user) {
-    if (cached_user in Readers) loadContent(viewType["reader"]);
-    else loadContent(viewType["author"]);
+  var logOutBtn = document.getElementById("logOutBtn");
+  if (localStorage.username && localStorage.userType) {
+    loadContent(viewType[localStorage.userType]);
+  } else {
+    loadContent(viewType["home"]);
+    logOutBtn.style.display = "none";
   }
-  else loadContent(viewType["unauthenticated"]);
-  */
+
+  logOutBtn.onclick = function () {
+    localStorage.clear();
+    // refresh page somehow
+  };
+
+  // testing api calls
   var article = {
     title: "test title",
   };
@@ -35,49 +39,79 @@ function initPage() {
   fetchBtn.onclick = function () {
     fetchArticles();
   };
-
-  // modal to login
-  // open login modal
-  var loginModal = document.getElementById("loginModal");
-
-  var openModal = document.getElementById("loginBtn");
-  openModal.onclick = function () {
-    loginModal.style.display = "block";
-  };
-
-  // close modal using button
-  var closeSpan = document.getElementsByClassName("close")[0];
-  closeSpan.onclick = function () {
-    loginModal.style.display = "none";
-  };
-  // close modal on click away
-  window.onclick = function (event) {
-    if (event.target == loginModal) {
-      loginModal.style.display = "none";
-    }
-  };
 }
 
-function fetchArticles() {
-  let articleNames = fetch(endpoint["articles"]);
-  articleNames
-    .then((res) => res.json())
-    .then((result) => {
-      console.log(result);
-      // for (item of result) {
-      //   console.log("result");
-      // }
-    });
+// Function to show the commenter view
+function showCommenterView() {
+  fetch("commenter.html")
+    .then((response) => response.text())
+    .then((html) => {
+      const content = document.getElementById("content");
+      content.innerHTML = html;
+
+      // set user area to login button
+      var curUser = document.getElementById("curUser");
+      curUser.style.display = "none";
+      var openModal = document.getElementById("openModal");
+      openModal.style.display = "block";
+
+      // open modal
+      var modal = content.querySelector("#loginModal");
+      openModal.onclick = function () {
+        modal.style.display = "block";
+      };
+
+      // close modal using button
+      var closeSpan = document.getElementsByClassName("close")[0];
+      closeSpan.onclick = function () {
+        loginModal.style.display = "none";
+      };
+    })
+    .catch((error) =>
+      console.error("Error fetching commenter content:", error)
+    );
+}
+
+// Function to show reader view
+function showReaderView() {
+  fetch("reader.html")
+    .then((response) => response.text())
+    .then((html) => {
+      const content = document.getElementById("content");
+      content.innerHTML = html;
+
+      // set user area to the cur user
+      var curUser = document.getElementById("curUser");
+      curUser.style.display = "block";
+      curUser.innerHTML = localStorage.username;
+      var openModal = document.getElementById("openModal");
+      openModal.style.display = "none";
+    })
+    .catch((error) => console.error("Error fetching reader content:", error));
+}
+
+// Function to show the author view
+function showAuthorView() {
+  fetch("author.html")
+    .then((response) => response.text())
+    .then((html) => {
+      const content = document.getElementById("content");
+      content.innerHTML = html;
+
+      // set user area to the cur user
+      var curUser = document.getElementById("curUser");
+      curUser.style.display = "block";
+      curUser.innerHTML = localStorage.username;
+      var openModal = document.getElementById("openModal");
+      openModal.style.display = "none";
+    })
+    .catch((error) => console.error("Error fetching author content:", error));
 }
 
 function loadContent(view) {
-  // reset the view
-  const contentAreas = document.getElementsByClassName("displayArea");
-  for (area of contentAreas) {
-    area.innerHTML = ""; // empty the containers for redrawing
-  }
   switch (view) {
-    case viewType["unauthenticated"]: {
+    case viewType["home"]: {
+      showCommenterView();
       // fetch first article
       // fetch teasers of two other articles
       // fetch one ad
@@ -85,15 +119,31 @@ function loadContent(view) {
       break;
     }
     case viewType["reader"]: {
+      showReaderView();
       // fetch full first article
       // fetch one ad
       // display view
       break;
     }
     case viewType["author"]: {
+      showAuthorView();
       // display view
+      break;
+    }
+    default: {
+      console.error("invalid request");
     }
   }
+}
+
+// API functions
+function fetchArticles() {
+  let articleNames = fetch(endpoint["articles"]);
+  articleNames
+    .then((res) => res.json())
+    .then((result) => {
+      console.log(result);
+    });
 }
 
 async function recordArticle(article) {
@@ -123,9 +173,20 @@ function statusMessage(message) {
   document.getElementById("messages").innerHTML = message;
 }
 
-function loginUser(user) {
-  console.log("Login");
-  let username = document.getElementById("userName").value;
-  let password = document.getElementById("password").value;
+function loginUser(event) {
+  event.preventDefault();
+
+  var form = event.target.closest("form");
+
+  var userName = form.querySelector("#userName").value;
+  var password = form.querySelector("#password").value;
+  var userType = form.querySelector("#userType").value;
+
+  // authenticate user and pass
+
+  localStorage.setItem("username", userName);
+  localStorage.setItem("userType", userType);
+
+  loadContent(viewType[localStorage.userType]);
   return false;
 }
