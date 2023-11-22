@@ -88,14 +88,16 @@ function showReaderView() {
       var openModal = document.getElementById("openModal");
       openModal.style.display = "none";
 
-      var articleTitle = document.getElementById("articleTitle");
-      var articleBody = document.getElementById("articleBody");
+      // populate the oage with article info
       fetchArticles().then((articles) => {
         console.log(articles);
         if (articles.length > 0) {
           var article = articles[0];
-          articleTitle.innerHTML = article.title;
-          articleBody.innerHTML = article.body;
+          document.getElementById("articleTitle").innerHTML = article.title;
+          document.getElementById("articleBody").innerHTML = article.body;
+          document.getElementById("articleComments").innerHTML =
+            article.comments;
+          document.getElementById("articleId").value = article._id;
         }
       });
     })
@@ -181,13 +183,27 @@ async function recordArticle(article) {
     .catch((error) => console.log("error saving article: ", error));
 }
 
-function addComment(event) {
+async function addComment(event) {
   event.preventDefault();
 
   var comment = document.getElementById("commentInput").value;
+  var id = document.getElementById("articleId").value;
 
-  console.log(comment);
-  // submit comment to database with associated story
+  const dataToUpdate = {
+    id: id,
+    comment: comment,
+  };
+  let updateArticle = await fetch(endpoint["articles"], {
+    method: "PUT",
+    headers: {
+      Accept: "application/JSON",
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(dataToUpdate),
+  })
+    .then((response) => response.json())
+    .then((result) => console.log(result))
+    .catch((error) => console.log("error adding comment"));
 }
 
 function updateSubmitButton() {

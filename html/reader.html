@@ -23,6 +23,7 @@
             id="commentInput"
             oninput="updateSubmitButton()"
           />
+          <input hidden name="articleId" id="articleId" />
           <button type="submit" id="submitComment" disabled>
             Post Comment
           </button></span
@@ -30,6 +31,9 @@
       </form>
     </div>
 
-    <div class="infoBox"><h3>Comments</h3></div>
+    <div class="infoBox">
+      <h3>Comments</h3>
+      <div id="articleComments"></div>
+    </div>
   </body>
 </html>

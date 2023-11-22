@@ -2,7 +2,7 @@
 const express = require("express");
 const app = express();
 
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 
@@ -59,12 +59,33 @@ app.get("/", async (request, response) => {
 
 // UPDATE, PUT
 app.put("/", async (request, response) => {
+  const filter = {
+    _id: new ObjectId(request.body.id),
+  };
+
+  const fieldsToUpdate = {
+    title: request.body.title,
+    body: request.body.body,
+    teaser: request.body.teaser,
+  };
+
+  // Filter out undefined or null values
+  const updateArticle = {
+    $set: Object.fromEntries(
+      Object.entries(fieldsToUpdate).filter(
+        ([_, v]) => v !== undefined && v !== null
+      )
+    ),
+    $push: { categories: request.body.category },
+    $push: { comments: request.body.comment },
+  };
+
   try {
     await client.connect();
     await client
       .db("dailybugle")
       .collection("articles")
-      .updateOne(voterFilter, updateDocument)
+      .updateOne(filter, updateArticle)
       .then((results) => response.send(results))
       .catch((error) => console.error(error));
   } catch (error) {
