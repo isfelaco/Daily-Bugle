@@ -19,6 +19,7 @@ app.post("/", async (request, response) => {
     title: articleData.title,
     categories: articleData.categories,
     teaser: articleData.teaser,
+    body: articleData.body,
   };
   // write to mongo
   try {

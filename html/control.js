@@ -28,6 +28,7 @@ function initPage() {
   // testing api calls
   var article = {
     title: "test title",
+    body: "test article body",
   };
 
   var testBtn = document.getElementById("testBtn");
@@ -86,6 +87,17 @@ function showReaderView() {
       curUser.innerHTML = localStorage.username;
       var openModal = document.getElementById("openModal");
       openModal.style.display = "none";
+
+      var articleTitle = document.getElementById("articleTitle");
+      var articleBody = document.getElementById("articleBody");
+      fetchArticles().then((articles) => {
+        console.log(articles);
+        if (articles.length > 0) {
+          var article = articles[0];
+          articleTitle.innerHTML = article.title;
+          articleBody.innerHTML = article.body;
+        }
+      });
     })
     .catch((error) => console.error("Error fetching reader content:", error));
 }
@@ -139,16 +151,17 @@ function loadContent(view) {
 // API functions
 function fetchArticles() {
   let articleNames = fetch(endpoint["articles"]);
-  articleNames
+  return articleNames
     .then((res) => res.json())
     .then((result) => {
-      console.log(result);
+      return result;
     });
 }
 
 async function recordArticle(article) {
   const dataToSend = {
     title: article.title,
+    body: article.body,
     // image: article.img,
     // teaser: article.teaser,
     // categories: article.categories,
@@ -163,14 +176,26 @@ async function recordArticle(article) {
   })
     .then((response) => response.json())
     .then((result) => {
-      statusMessage("success");
       // update the list of articles ?
     })
     .catch((error) => console.log("error saving article: ", error));
 }
 
-function statusMessage(message) {
-  document.getElementById("messages").innerHTML = message;
+function addComment(event) {
+  event.preventDefault();
+
+  var comment = document.getElementById("commentInput").value;
+
+  console.log(comment);
+  // submit comment to database with associated story
+}
+
+function updateSubmitButton() {
+  var submitComment = document.getElementById("submitComment");
+  var commentInput = document.getElementById("commentInput");
+
+  // Check if the input value is not empty
+  submitComment.disabled = commentInput.value.trim() === "";
 }
 
 function loginUser(event) {

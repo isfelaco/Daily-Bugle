@@ -4,9 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Reader View</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="control.js"></script>
   </head>
   <body>
-    <h1>Welcome to the Reader View</h1>
-    <!-- Your content for the commenter view goes here -->
+    <div class="infoBox">
+      <h2 id="articleTitle"></h2>
+      <p id="articleBody"></p>
+    </div>
+
+    <div class="infoBox">
+      <form method="post" name="commentForm" onsubmit="addComment(event)">
+        <h3>Add a Comment</h3>
+        <span
+          ><input
+            type="text"
+            name="comment"
+            id="commentInput"
+            oninput="updateSubmitButton()"
+          />
+          <button type="submit" id="submitComment" disabled>
+            Post Comment
+          </button></span
+        >
+      </form>
+    </div>
+
+    <div class="infoBox"><h3>Comments</h3></div>
   </body>
 </html>
