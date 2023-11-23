@@ -4,9 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Author View</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="control.js"></script>
   </head>
   <body>
-    <h1>Welcome to the Author View</h1>
-    <!-- Your content for the author view goes here -->
+    <form class="articleForm" onsubmit="recordArticle(event)">
+      <div class="infoBox">
+        <input name="body" type="text" class="articleBody" id="bodyInput" />
+      </div>
+      <div class="infoBox">
+        <h3>Title</h3>
+        <input name="title" type="text" id="titleInput" />
+      </div>
+      <div class="infoBox">
+        <h3>Teaser</h3>
+        <input name="teaser" type="text" id="teaserInput" />
+      </div>
+      <div class="infoBox">
+        <h3>Categories</h3>
+        <input name="category" type="text" id="categoryInput" />
+      </div>
+      <button type="submit">Submit Article</button>
+    </form>
   </body>
 </html>

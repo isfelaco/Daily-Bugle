@@ -88,3 +88,14 @@ body {
   border: 3px dotted gray;
   padding: 10px;
 }
+
+.articleForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.articleBody {
+  width: 100%;
+  height: 100px;
+}

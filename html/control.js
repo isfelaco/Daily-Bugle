@@ -24,22 +24,6 @@ function initPage() {
     localStorage.clear();
     // refresh page somehow
   };
-
-  // testing api calls
-  var article = {
-    title: "test title",
-    body: "test article body",
-  };
-
-  var testBtn = document.getElementById("testBtn");
-  testBtn.onclick = function () {
-    recordArticle(article);
-  };
-
-  var fetchBtn = document.getElementById("fetchArticles");
-  fetchBtn.onclick = function () {
-    fetchArticles();
-  };
 }
 
 // Function to show the commenter view
@@ -126,26 +110,18 @@ function loadContent(view) {
   switch (view) {
     case viewType["home"]: {
       showCommenterView();
-      // fetch first article
-      // fetch teasers of two other articles
-      // fetch one ad
-      // display view
       break;
     }
     case viewType["reader"]: {
       showReaderView();
-      // fetch full first article
-      // fetch one ad
-      // display view
       break;
     }
     case viewType["author"]: {
       showAuthorView();
-      // display view
       break;
     }
     default: {
-      console.error("invalid request");
+      console.error("invalid view request");
     }
   }
 }
@@ -160,13 +136,13 @@ function fetchArticles() {
     });
 }
 
-async function recordArticle(article) {
+async function recordArticle(event) {
   const dataToSend = {
-    title: article.title,
-    body: article.body,
+    title: document.getElementById("titleInput").value,
+    body: document.getElementById("bodyInput").value,
     // image: article.img,
-    // teaser: article.teaser,
-    // categories: article.categories,
+    teaser: document.getElementById("teaserInput").value,
+    categories: ["cat 1", "cat 2"],
   };
   let addArticle = await fetch(endpoint["articles"], {
     method: "POST",
