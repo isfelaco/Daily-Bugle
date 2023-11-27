@@ -99,3 +99,9 @@ body {
   width: 100%;
   height: 100px;
 }
+
+.navButtons {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}

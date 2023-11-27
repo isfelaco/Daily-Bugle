@@ -11,18 +11,18 @@ const viewType = {
 };
 
 function initPage() {
-  // set up the page
-  var logOutBtn = document.getElementById("logOutBtn");
+  if (!localStorage.getItem("index")) localStorage.setItem("index", 0);
+
   if (localStorage.username && localStorage.userType) {
     loadContent(viewType[localStorage.userType]);
   } else {
     loadContent(viewType["home"]);
-    logOutBtn.style.display = "none";
   }
 
+  var logOutBtn = document.getElementById("logOutBtn");
   logOutBtn.onclick = function () {
     localStorage.clear();
-    // refresh page somehow
+    location.reload();
   };
 }
 
@@ -72,18 +72,28 @@ function showReaderView() {
       var openModal = document.getElementById("openModal");
       openModal.style.display = "none";
 
+      document.getElementById("logOutBtn").style.display = "block";
+
+      var articles = null;
       // populate the oage with article info
-      fetchArticles().then((articles) => {
-        console.log(articles);
-        if (articles.length > 0) {
-          var article = articles[0];
-          document.getElementById("articleTitle").innerHTML = article.title;
-          document.getElementById("articleBody").innerHTML = article.body;
-          document.getElementById("articleComments").innerHTML =
-            article.comments;
-          document.getElementById("articleId").value = article._id;
+      fetchArticles().then((a) => {
+        if (a.length > 0) {
+          articles = a;
+          renderArticle(a[localStorage.getItem("index")]);
         }
       });
+
+      // set the action for the navigation buttons
+      var nextBtn = document.getElementById("next");
+      var prevBtn = document.getElementById("previous");
+      nextBtn.onclick = function () {
+        var i = parseInt(localStorage.getItem("index"));
+        localStorage.setItem("index", navArticles(articles, i, 1));
+      };
+      prevBtn.onclick = function () {
+        var i = parseInt(localStorage.getItem("index"));
+        localStorage.setItem("index", navArticles(articles, i, 0));
+      };
     })
     .catch((error) => console.error("Error fetching reader content:", error));
 }
@@ -102,6 +112,8 @@ function showAuthorView() {
       curUser.innerHTML = localStorage.username;
       var openModal = document.getElementById("openModal");
       openModal.style.display = "none";
+
+      document.getElementById("logOutBtn").style.display = "block";
     })
     .catch((error) => console.error("Error fetching author content:", error));
 }
@@ -126,7 +138,7 @@ function loadContent(view) {
   }
 }
 
-// API functions
+// fetch all articles
 function fetchArticles() {
   let articleNames = fetch(endpoint["articles"]);
   return articleNames
@@ -136,6 +148,7 @@ function fetchArticles() {
     });
 }
 
+// record a new article
 async function recordArticle(event) {
   const dataToSend = {
     title: document.getElementById("titleInput").value,
@@ -159,6 +172,7 @@ async function recordArticle(event) {
     .catch((error) => console.log("error saving article: ", error));
 }
 
+// add a comment to an article
 async function addComment(event) {
   event.preventDefault();
 
@@ -180,6 +194,8 @@ async function addComment(event) {
     .then((response) => response.json())
     .then((result) => console.log(result))
     .catch((error) => console.log("error adding comment"));
+
+  location.reload();
 }
 
 function updateSubmitButton() {
@@ -206,4 +222,27 @@ function loginUser(event) {
 
   loadContent(viewType[localStorage.userType]);
   return false;
+}
+
+function renderArticle(article) {
+  document.getElementById("articleTitle").innerHTML = article.title;
+  document.getElementById("articleBody").innerHTML = article.body;
+  document.getElementById("articleComments").innerHTML =
+    article.comments || "No comments";
+  document.getElementById("articleId").value = article._id;
+}
+
+function navArticles(articles, index, dir) {
+  if (dir === 1) {
+    if (articles.length - 1 > index) {
+      renderArticle(articles[index + 1]);
+      return index + 1;
+    }
+  } else {
+    if (index > 0) {
+      renderArticle(articles[index - 1]);
+      return index - 1;
+    }
+  }
+  return index;
 }
