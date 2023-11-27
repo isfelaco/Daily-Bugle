@@ -1,8 +1,7 @@
 // front end JS for Daily Bugle app
 const endpoint = {};
 endpoint["articles"] = "http://localhost:8080/api/articles";
-endpoint["readers"] = "http://localhost:8080/api/readers";
-endpoint["authors"] = "http://localhost:8080/api/authors";
+endpoint["users"] = "http://localhost:8080/api/users";
 
 const viewType = {
   home: "commenter",
@@ -157,7 +156,7 @@ async function recordArticle(event) {
     teaser: document.getElementById("teaserInput").value,
     categories: ["cat 1", "cat 2"],
   };
-  let addArticle = await fetch(endpoint["articles"], {
+  await fetch(endpoint["articles"], {
     method: "POST",
     headers: {
       Accept: "application/JSON",
@@ -206,21 +205,73 @@ function updateSubmitButton() {
   submitComment.disabled = commentInput.value.trim() === "";
 }
 
-function loginUser(event) {
+async function fetchUser(username) {
+  try {
+    const response = await fetch(`${endpoint["users"]}/${username}`);
+    if (response.ok) {
+      const user = await response.json();
+      return { found: true, user };
+    } else if (response.status === 404) {
+      return { found: false };
+    } else {
+      console.error(
+        "Failed to fetch user: ",
+        response.status,
+        response.statusText
+      );
+      return { found: false };
+    }
+  } catch (error) {
+    console.error("Error fetching user: ", error);
+    return { found: false };
+  }
+}
+
+async function createUser() {
+  const userData = {
+    username: document.querySelector("#usernameInput").value,
+    password: document.querySelector("#passwordInput").value,
+    type: document.querySelector("#userTypeInput").value,
+  };
+  await fetch(endpoint["users"], {
+    method: "POST",
+    headers: {
+      Accept: "application/JSON",
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => console.log("error saving user: ", error));
+}
+
+async function loginUser(event) {
   event.preventDefault();
 
   var form = event.target.closest("form");
 
-  var userName = form.querySelector("#userName").value;
-  var password = form.querySelector("#password").value;
-  var userType = form.querySelector("#userType").value;
+  var username = form.querySelector("#usernameInput").value;
+  var password = form.querySelector("#passwordInput").value;
+  var userType = form.querySelector("#userTypeInput").value;
 
-  // authenticate user and pass
+  const result = await fetchUser(username);
 
-  localStorage.setItem("username", userName);
-  localStorage.setItem("userType", userType);
+  if (result.found) {
+    const user = result.user;
+    // authenticate user and pass
+    if (user.password === password && user.type === userType) {
+      localStorage.setItem("username", username);
+      localStorage.setItem("userType", userType);
 
-  loadContent(viewType[localStorage.userType]);
+      loadContent(viewType[localStorage.userType]);
+    }
+  } else {
+    document.getElementById("loginError").style.display = "block";
+  }
+
   return false;
 }
 

@@ -14,16 +14,20 @@
           <span class="close">X</span>
           <p>
             <label for="userType">I am a..</label>
-            <select id="userType" name="userType">
+            <select id="userTypeInput" name="userType">
               <option value="reader">Reader</option>
               <option value="author">Author</option>
             </select>
           </p>
-          <p><input type="text" name="userName" id="userName" /></p>
-          <p><input type="text" name="password" id="password" /></p>
+          <p><input type="text" name="username" id="usernameInput" /></p>
+          <p><input type="text" name="password" id="passwordInput" /></p>
           <p>
-            <button id="loginBtn" type="submit">[ login ]</button>
+            <button id="loginBtn" type="submit">Login</button>
           </p>
+          <div id="loginError" style="display: none">
+            <p>No user was found. Would you like to create one?</p>
+            <button onclick="createUser()">Create New User</button>
+          </div>
         </div>
       </form>
     </div>
