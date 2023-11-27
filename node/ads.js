@@ -6,7 +6,7 @@ const { MongoClient, ObjectId } = require("mongodb");
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 
-let port = 3001;
+let port = 3003;
 
 app.use(express.json());
 
@@ -15,20 +15,20 @@ app.listen(port, () => console.log(`listening on port ${port}`));
 // CREATE
 app.post("/", async (request, response) => {
   // create an object to match our article object in mongo
-  const articleData = request.body;
-  const article = {
-    title: articleData.title,
-    categories: articleData.categories,
-    teaser: articleData.teaser,
-    body: articleData.body,
+  const adData = request.body;
+  const ad = {
+    title: adData.title,
+    body: adData.body,
+    views: adData.views,
+    clicks: adData.clicks,
   };
   // write to mongo
   try {
     await client.connect();
     await client
       .db("dailybugle")
-      .collection("articles")
-      .insertOne(article)
+      .collection("ads")
+      .insertOne(ad)
       .then((results) => response.send(results))
       .catch((error) => console.error(error));
   } catch (error) {
@@ -38,17 +38,16 @@ app.post("/", async (request, response) => {
   }
 });
 
-// READ
 app.get("/", async (request, response) => {
   try {
     await client.connect();
     await client
       .db("dailybugle")
-      .collection("articles")
-      .find()
-      .toArray()
-      .then((results) => {
-        response.send(results);
+      .collection("ads")
+      .aggregate([{ $sample: { size: 1 } }])
+      .next()
+      .then((result) => {
+        response.send(result);
       })
       .catch((error) => console.error(error));
   } catch (error) {
@@ -58,6 +57,7 @@ app.get("/", async (request, response) => {
   }
 });
 
+// update ad info
 // UPDATE, PUT
 app.put("/", async (request, response) => {
   const filter = {
@@ -67,45 +67,25 @@ app.put("/", async (request, response) => {
   const fieldsToUpdate = {
     title: request.body.title,
     body: request.body.body,
-    teaser: request.body.teaser,
+    views: request.body.views,
+    clicks: request.body.clicks,
   };
 
   // Filter out undefined or null values
-  const updateArticle = {
+  const updateAd = {
     $set: Object.fromEntries(
       Object.entries(fieldsToUpdate).filter(
         ([_, v]) => v !== undefined && v !== null
       )
     ),
-    $push: { categories: request.body.category },
-    $push: { comments: request.body.comment },
   };
 
   try {
     await client.connect();
     await client
       .db("dailybugle")
-      .collection("articles")
-      .updateOne(filter, updateArticle)
-      .then((results) => response.send(results))
-      .catch((error) => console.error(error));
-  } catch (error) {
-    console.error(error);
-  } finally {
-    client.close();
-  }
-});
-
-// DELETE, DELETE
-app.delete("/", async (request, response) => {
-  const articleData = request.body;
-  const article = { title: articleData.title };
-  try {
-    await client.connect();
-    await client
-      .db("dailybugle")
-      .collection("articles")
-      .deleteOne(article)
+      .collection("ads")
+      .updateOne(filter, updateAd)
       .then((results) => response.send(results))
       .catch((error) => console.error(error));
   } catch (error) {

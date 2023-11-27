@@ -89,6 +89,12 @@ body {
   padding: 10px;
 }
 
+.ad {
+  border: 3px dashed lightcoral;
+  padding: 10px;
+  cursor: pointer;
+}
+
 .articleForm {
   display: flex;
   flex-direction: column;
