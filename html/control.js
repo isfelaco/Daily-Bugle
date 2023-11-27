@@ -33,11 +33,12 @@ function showCommenterView() {
       const content = document.getElementById("content");
       content.innerHTML = html;
 
-      // set user area to login button
+      // setup login/logout controls
       var curUser = document.getElementById("curUser");
       curUser.style.display = "none";
       var openModal = document.getElementById("openModal");
       openModal.style.display = "block";
+      document.getElementById("logOutBtn").style.display = "none";
 
       // open modal
       var modal = content.querySelector("#loginModal");
@@ -50,6 +51,24 @@ function showCommenterView() {
       closeSpan.onclick = function () {
         loginModal.style.display = "none";
       };
+
+      // populate article previews
+      fetchArticles().then((articles) => {
+        if (articles.length > 0) {
+          document.getElementById("article1Title").innerHTML =
+            articles[0].title;
+          document.getElementById("article1").innerHTML = articles[0].body;
+        }
+        if (articles.length > 1) {
+          document.getElementById("teaser2Title").innerHTML = articles[1].title;
+
+          document.getElementById("teaser2").innerHTML = articles[1].teaser;
+        }
+        if (articles.length > 2) {
+          document.getElementById("teaser3Title").innerHTML = articles[2].title;
+          document.getElementById("teaser3").innerHTML = articles[2].teaser;
+        }
+      });
     })
     .catch((error) =>
       console.error("Error fetching commenter content:", error)
@@ -74,7 +93,7 @@ function showReaderView() {
       document.getElementById("logOutBtn").style.display = "block";
 
       var articles = null;
-      // populate the oage with article info
+      // populate the page with article info
       fetchArticles().then((a) => {
         if (a.length > 0) {
           articles = a;
@@ -259,15 +278,16 @@ async function loginUser(event) {
 
   const result = await fetchUser(username);
 
-  if (result.found) {
-    const user = result.user;
-    // authenticate user and pass
-    if (user.password === password && user.type === userType) {
-      localStorage.setItem("username", username);
-      localStorage.setItem("userType", userType);
+  // authenticate user and pass
+  if (
+    result.found &&
+    result.user.password === password &&
+    result.user.type === userType
+  ) {
+    localStorage.setItem("username", username);
+    localStorage.setItem("userType", userType);
 
-      loadContent(viewType[localStorage.userType]);
-    }
+    loadContent(viewType[localStorage.userType]);
   } else {
     document.getElementById("loginError").style.display = "block";
   }

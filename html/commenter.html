@@ -7,9 +7,21 @@
     <script src="control.js"></script>
   </head>
   <body>
+    <div class="infoBox">
+      <h2 id="article1Title"></h2>
+      <p id="article1"></p>
+    </div>
+    <div class="infoBox">
+      <h3 id="teaser2Title"></h3>
+      <p id="teaser2"></p>
+    </div>
+    <div class="infoBox">
+      <h3 id="teaser3Title"></h3>
+      <p id ="teaser3"></p>
+    </div>
+
     <div id="loginModal" class="modal">
       <form method="post" name="loginForm" onsubmit="loginUser(event)">
-        <!-- html structure of the modal window-->
         <div class="modal-content">
           <span class="close">X</span>
           <p>
@@ -19,9 +31,8 @@
               <option value="author">Author</option>
             </select>
           </p>
-          <p><input type="text" name="username" id="usernameInput" /></p>
-          <p><input type="text" name="password" id="passwordInput" /></p>
-          <p>
+          <p>Username: <input type="text" name="username" id="usernameInput" /></p>
+          <p>Password: <input type="text" name="password" id="passwordInput" /></p>
             <button id="loginBtn" type="submit">Login</button>
           </p>
           <div id="loginError" style="display: none">
