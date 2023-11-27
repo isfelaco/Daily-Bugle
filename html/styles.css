@@ -1,9 +1,11 @@
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Verdana, sans-serif;
+  color: white;
   margin: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  background-color: #419cf1;
 }
 
 .content {
@@ -16,10 +18,24 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 5px dotted gray;
+  border: 5px dotted lightskyblue;
+  border-radius: 10px;
+  background-color: rgb(16, 95, 205);
 }
 .header h1 {
   margin: 10px;
+}
+
+button {
+  background-color: mediumblue;
+  font-family: Verdana, sans-serif;
+  font-size: 15px;
+  color: white;
+  text-align: center;
+  min-width: 5em;
+  height: 2em;
+  border: 1px solid white;
+  border-radius: 10px;
 }
 
 .loginArea {
@@ -31,22 +47,8 @@ body {
   height: 25px;
   align-self: right;
 }
-
-.loginbtn {
-  background-color: #ffffcc;
-  font-size: 20px;
-  text-align: center;
-  width: 5em;
-}
 .loginbtn:hover {
-  background-color: green;
-}
-
-.logoutbtn {
-  background-color: #ffffcc;
-  font-size: 20px;
-  text-align: center;
-  width: 5em;
+  background-color: lightgreen;
 }
 .logoutbtn:hover {
   background-color: red;
@@ -61,18 +63,19 @@ body {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0, 0, 0);
+  background-color: #419cf1;
   background-attachment: rgba(0, 0, 0, 0.4); /*opaque*/
 }
 .modal-content {
-  background-color: #fefefe;
+  background-color: rgb(45, 111, 204);
   margin: 15% auto;
   padding: 20px;
-  border: 1px solid #888;
+  border: 3px dotted lightblue;
+  border-radius: 10px;
   width: 80%;
 }
 .close {
-  color: #aaa;
+  color: mediumBlue;
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -85,14 +88,31 @@ body {
 }
 
 .infoBox {
-  border: 3px dotted gray;
+  border: 3px dotted lightblue;
+  border-radius: 10px;
+  background-color: rgb(45, 111, 204);
   padding: 10px;
 }
 
+@keyframes pulsate {
+  0% {
+    border-color: lightBlue;
+  }
+  50% {
+    border-color: blue;
+  }
+  100% {
+    border-color: lightBlue;
+  }
+}
+
 .ad {
-  border: 3px dashed lightcoral;
+  border: 3px dotted red;
+  animation: pulsate 5s infinite;
+  border-radius: 10px;
   padding: 10px;
   cursor: pointer;
+  flex: 1;
 }
 
 .articleForm {
@@ -110,4 +130,24 @@ body {
   display: flex;
   width: 100%;
   justify-content: space-between;
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 0 0 75%;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  margin-bottom: 10px;
 }

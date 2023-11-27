@@ -185,13 +185,33 @@ function updateSubmitButton() {
   submitComment.disabled = commentInput.value.trim() === "";
 }
 
+// only called in commenter.html modal to login
+function updateLoginButton() {
+  var usernameInput = document.getElementById("usernameInput");
+  var passwordInput = document.getElementById("passwordInput");
+  var loginBtn = document.getElementById("loginBtn");
+  loginBtn.disabled =
+    usernameInput.value.trim() === "" || passwordInput.value.trim() === "";
+}
+
 // renders an article in reader view
 function renderArticle(article) {
   document.getElementById("articleTitle").innerHTML = article.title;
   document.getElementById("articleBody").innerHTML = article.body;
-  document.getElementById("articleComments").innerHTML =
-    article.comments || "No comments";
   document.getElementById("articleId").value = article._id;
+
+  var comments = document.getElementById("articleComments");
+  comments.innerHTML = "";
+  if (!article.comments) comments.innerHTML = "No comments";
+  else {
+    let list = document.createElement("ul");
+    for (const comment of article.comments) {
+      let item = document.createElement("li");
+      item.innerHTML = comment;
+      list.append(item);
+    }
+    comments.append(list);
+  }
 }
 
 // navigates through existing articles in reader view
@@ -329,17 +349,20 @@ async function loginUser(event) {
   const result = await fetchUser(username);
 
   // authenticate user and pass
-  if (
-    result.found &&
-    result.user.password === password &&
-    result.user.type === userType
-  ) {
-    localStorage.setItem("username", username);
-    localStorage.setItem("userType", userType);
-
-    loadContent(viewType[localStorage.userType]);
+  var loginMessage = document.getElementById("loginMessage");
+  if (result.found) {
+    if (result.user.password === password && result.user.type === userType) {
+      localStorage.setItem("username", username);
+      localStorage.setItem("userType", userType);
+      loadContent(viewType[localStorage.userType]);
+    } else {
+      document.getElementById("loginMessage").innerHTML = "Incorrect password.";
+    }
   } else {
-    document.getElementById("loginError").style.display = "block";
+    document.getElementById("createUserBtn").style.display = "block";
+    document.getElementById(
+      "loginMessage"
+    ).innerHTML = `No ${userType} was found with that username and password. Would you like to create one?`;
   }
 
   return false;

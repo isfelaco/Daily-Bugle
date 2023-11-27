@@ -18,32 +18,34 @@
       <p id="articleBody"></p>
     </div>
 
-    <div class="infoBox">
-      <form method="post" name="commentForm" onsubmit="addComment(event)">
-        <h3>Add a Comment</h3>
-        <span
-          ><input
-            type="text"
-            name="comment"
-            id="commentInput"
-            oninput="updateSubmitButton()"
-          />
-          <input hidden name="articleId" id="articleId" />
-          <button type="submit" id="submitComment" disabled>
-            Post Comment
-          </button></span
-        >
-      </form>
-    </div>
-
-    <div class="infoBox">
-      <h3>Comments</h3>
-      <div id="articleComments"></div>
-    </div>
-
-    <div id="ad" class="ad">
-      <h3 id="adTitle"></h3>
-      <p id="adBody"></p>
+    <div class="row">
+      <div class="column">
+        <div class="infoBox">
+          <form method="post" name="commentForm" onsubmit="addComment(event)">
+            <h3>Add a Comment</h3>
+            <span
+              ><input
+                type="text"
+                name="comment"
+                id="commentInput"
+                oninput="updateSubmitButton()"
+              />
+              <input hidden name="articleId" id="articleId" />
+              <button type="submit" id="submitComment" disabled>
+                Post Comment
+              </button></span
+            >
+          </form>
+        </div>
+        <div class="infoBox">
+          <h3>Comments</h3>
+          <div id="articleComments"></div>
+        </div>
+      </div>
+      <div id="ad" class="ad">
+        <h3 id="adTitle"></h3>
+        <p id="adBody"></p>
+      </div>
     </div>
   </body>
 </html>
